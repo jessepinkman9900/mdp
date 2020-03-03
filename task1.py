@@ -102,10 +102,15 @@ class Game():
       rechargeVal = (0.8)*float(mdp.utility[(s+50,a,h)]) + (0.2)*float(mdp.utility[(s,a,h)])
     return rechargeVal
 
-  def getAction(self,dodgeVal, shootVal, rechargeVal):
+  def getAction(self,mdp,dodgeVal, shootVal, rechargeVal):
     '''
       - action of that iteration is the action that gives max utility among all possible actions
     '''
+    
+    dodgeVal = self.dodgeCost + mdp.gamma*dodgeVal
+    shootVal = self.shootCost + mdp.gamma*shootVal
+    rechargeVal =  self.rechargeCost + mdp.gamma*rechargeVal
+
     action = ''
     if dodgeVal > shootVal:
       if dodgeVal > rechargeVal:
@@ -133,14 +138,14 @@ class Game():
       dodgeVal = self.getDodgeVal(state,mdp)
 
       #action 
-      action = self.getAction(dodgeVal, shootVal, rechargeVal)
+      action = self.getAction(mdp,dodgeVal, shootVal, rechargeVal)
 
       # updating
       '''
       ****   please verify once not sure how to handle terminal states   *****
       ****   also verify formula and related calculations once           *****
       '''
-      val = float(mdp.gamma * max(self.dodgeCost + dodgeVal,self.shootCost + shootVal, self.rechargeCost + rechargeVal))
+      val = float( max(self.dodgeCost + mdp.gamma*dodgeVal,self.shootCost + mdp.gamma*shootVal, self.rechargeCost + mdp.gamma*rechargeVal))
       if h==0:
         val = float(10)
         action = '-1'
