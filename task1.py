@@ -102,14 +102,14 @@ class Game():
       rechargeVal = (0.8)*float(mdp.utility[(s+50,a,h)]) + (0.2)*float(mdp.utility[(s,a,h)])
     return rechargeVal
 
-  def getAction(self,mdp,dodgeVal, shootVal, rechargeVal):
+  def getAction(self,state,mdp):
     '''
       - action of that iteration is the action that gives max utility among all possible actions
     '''
     
-    dodgeVal = self.dodgeCost + mdp.gamma*dodgeVal
-    shootVal = self.shootCost + mdp.gamma*shootVal
-    rechargeVal =  self.rechargeCost + mdp.gamma*rechargeVal
+    dodgeVal = self.dodgeCost + mdp.gamma*self.getDodgeVal(state,mdp)
+    shootVal = self.shootCost + mdp.gamma*self.getShootVal(state,mdp)
+    rechargeVal =  self.rechargeCost + mdp.gamma*self.getRechargeVal(state,mdp)
 
     action = ''
     if dodgeVal > shootVal:
@@ -138,7 +138,7 @@ class Game():
       dodgeVal = self.getDodgeVal(state,mdp)
 
       #action 
-      action = self.getAction(mdp,dodgeVal, shootVal, rechargeVal)
+      action = self.getAction(state,mdp)
 
       # updating
       '''
